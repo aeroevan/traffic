@@ -146,15 +146,13 @@ class OpenAP:
         if TAS is None:
             TAS = self.data.groundspeed  # unit: knots
 
-        path_angle: tt.angle_array = compute_path_angle(vertical_rate, TAS)
-
         FF = []
         Fuel = []
-        for i, tas, alt, pa, dti in zip(
-            count(1), TAS, altitude, path_angle, dt
+        for i, tas, alt, vs, dti in zip(
+            count(1), TAS, altitude, vertical_rate, dt
         ):
             ff = fuelflow.enroute(
-                mass=mass[i - 1], tas=tas, alt=alt, path_angle=pa
+                mass=mass[i - 1], tas=tas, alt=alt, vs=vs
             )
             if update_mass:
                 mass[i:] -= ff * dti if ff == ff else 0
